@@ -22,3 +22,11 @@
       "to_do_list_id": 1
     }
 }
+
+{
+  "to_do_list": {
+    "id": 1,
+    "title": "My First LisUPDATE",
+    "user_id": 1
+  }
+}

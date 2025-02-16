@@ -1,25 +1,40 @@
 class ToDosController < ApplicationController
-  skip_before_action :verify_authenticity_token
-
-
+  skip_before_action :verify_authenticity_token, only: [ :create, :update, :destroy ]
   def index
-    @todos = ToDo.all
+    @todos = ToDos::Queries::GetAllToDosQuery.new.call
     render json: @todos
   end
 
   def show
-    @todo = ToDo.find(params[:id])
+    @todo = ToDos::Queries::GetToDoByIdQuery.new(params[:id]).call
     render json: @todo
   end
 
-
   def create
-    @todo = ToDo.new(to_do_params)
-    if @todo.save
+    todo_dto = ToDoDto.new(to_do_params)
+
+    if todo_dto.valid?
+      @todo = ToDos::Commands::CreateToDoCommand.new(todo_dto).call
       render json: @todo, status: :created
     else
-      render json: @todo.errors, status: :unprocessable_entity
+      render json: todo_dto.errors, status: :unprocessable_entity
     end
+  end
+
+  def update
+    todo_dto = ToDoDto.new(to_do_params)
+
+    if todo_dto.valid?
+      @todo = ToDos::Commands::UpdateToDoCommand.new(params[:id], todo_dto).call
+      render json: @todo
+    else
+      render json: todo_dto.errors, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    ToDos::Commands::DeleteToDoCommand.new(params[:id]).call
+    head :no_content
   end
 
   private
