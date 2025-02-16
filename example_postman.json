@@ -1,0 +1,24 @@
+
+#POST
+{
+    "user": {
+      "name": "Alice",
+      "email": "alice@example.com"
+    }
+}
+  
+{
+    "to_do_list": {
+      "title": "My First List",
+      "user_id": 1
+    }
+}
+
+
+{
+    "to_do": {
+      "description": "Buy groceries",
+      "is_done": false,
+      "to_do_list_id": 1
+    }
+}
